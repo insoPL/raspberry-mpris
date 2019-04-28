@@ -1,11 +1,13 @@
 import RPi.GPIO as GPIO
 from raspris import PreviousButton, PlayButton, NextButton
+import logging
 
 def main():
     play_button = PlayButton(38)
     next_button = NextButton(40)
     previous_button = PreviousButton(36)
     message = input("Press enter to quit\n\n")
+    return "text"
 
 
 if __name__ == '__main__':
@@ -16,4 +18,3 @@ if __name__ == '__main__':
     logging.getLogger().setLevel(logging.INFO)
     main()
     GPIO.cleanup()
-
