@@ -1,8 +1,6 @@
 from mpris_controller import MprisController
 import RPi.GPIO as GPIO
 import logging
-from time import time
-
 
 class Button:
     gpio_initialized = False
@@ -15,14 +13,10 @@ class Button:
             GPIO.setmode(GPIO.BOARD)
             self.gpio_initialized = True
             logging.info("GPIO successfully initiated")
-        self.last_used = time()
         GPIO.setup(gpio_number, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
-        GPIO.add_event_detect(gpio_number, GPIO.RISING, callback=self.on_press)
+        GPIO.add_event_detect(gpio_number, GPIO.RISING, callback=self.on_press, bouncetime = 5000)
 
     def on_press(self, channel):
-        if time() - self.last_used < 1:
-            raise ValueError
-        self.last_used = time()
         logging.info("Button %s was pressed!" % self.__class__.__name__)
 
     def __del__(self):
