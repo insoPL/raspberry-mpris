@@ -1,5 +1,5 @@
-from rpi_buttons import PlayButton, NextButton, PreviousButton
-import logging
+import RPi.GPIO as GPIO
+from raspberry-mpris import PreviousButton, PlayButton, NextButton
 
 def main():
     play_button = PlayButton(38)
@@ -9,6 +9,11 @@ def main():
 
 
 if __name__ == '__main__':
-    logging.getLogger().setLevel(logging.INFO)
+    GPIO.setwarnings(False)
+    GPIO.setmode(GPIO.BOARD)
+    logging.info("GPIO successfully initiated")
 
+    logging.getLogger().setLevel(logging.INFO)
     main()
+    GPIO.cleanup()
+
