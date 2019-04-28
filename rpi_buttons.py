@@ -29,7 +29,7 @@ class PlayButton(Button):
         Button.__init__(self, gpio_number)
 
     def on_press(self):
-        Button.on_press(self)
+        Button.on_press()
         self.spotifyd_player.play_pause()
 
 
@@ -38,7 +38,7 @@ class NextButton(Button):
         Button.__init__(self, gpio_number)
 
     def on_press(self):
-        Button.on_press(self)
+        Button.on_press()
         self.spotifyd_player.next()
 
 
@@ -47,5 +47,5 @@ class PreviousButton(Button):
         Button.__init__(self, gpio_number)
 
     def on_press(self):
-        Button.on_press(self)
+        Button.on_press()
         self.spotifyd_player.previous()
