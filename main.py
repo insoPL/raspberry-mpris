@@ -1,5 +1,5 @@
 import RPi.GPIO as GPIO
-from raspberry-mpris import PreviousButton, PlayButton, NextButton
+from raspris import PreviousButton, PlayButton, NextButton
 
 def main():
     play_button = PlayButton(38)
