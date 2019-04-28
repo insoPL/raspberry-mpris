@@ -5,7 +5,7 @@ import logging
 class MprisController:
     def __init__(self, player_name):
         self.player_name = player_name
-        if self.player_name != "mopidy" or self.player_name != "spotifyd": raise ValueError
+        if self.player_name != "mopidy" and self.player_name != "spotifyd": raise ValueError
 
         system_bus = dbus.SystemBus()
         proxy = system_bus.get_object('org.mpris.MediaPlayer2.'+self.player_name, '/org/mpris/MediaPlayer2')
