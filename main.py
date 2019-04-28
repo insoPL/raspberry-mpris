@@ -1,5 +1,5 @@
 from rpi_buttons import PlayButton, NextButton, PreviousButton
-
+import logging
 
 def main():
     play_button = PlayButton(38)
@@ -9,4 +9,6 @@ def main():
 
 
 if __name__ == '__main__':
+    logging.getLogger().setLevel(logging.INFO)
+
     main()
