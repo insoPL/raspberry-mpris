@@ -13,7 +13,7 @@ class MprisManger:
 
     def check_player(self):
         for name, player in self.players.items():
-            if player.get_status == "Playing":
+            if player.get_status() == "Playing":
                 if self.current_player == "":
                     self.current_player = name
                     return self.current_player
@@ -33,8 +33,8 @@ def main():
     mpris_manager = MprisManger()
 
     while True:
-        print(mpris_manager.check_player())
-        time.sleep(5)
+        logging.info("Currently rocking:" + mpris_manager.check_player())
+        time.sleep(3)
 
 if __name__ == '__main__':
     #GPIO.setwarnings(False)
