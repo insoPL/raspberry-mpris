@@ -1,13 +1,10 @@
-from mpris_controller import MprisController
 import RPi.GPIO as GPIO
 import logging
 
 
 class Button:
-    spotifyd_player = MprisController("spotifyd")
-    mopidy_player = MprisController("mopidy")
-
-    def __init__(self, gpio_number):
+    def __init__(self, gpio_number, mpris_manager):
+        self.mpris_manager = mpris_manager
         GPIO.setup(gpio_number, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
         GPIO.add_event_detect(gpio_number, GPIO.RISING, callback=self.on_press, bouncetime=200)
 
@@ -16,27 +13,27 @@ class Button:
 
 
 class PlayButton(Button):
-    def __init__(self, gpio_number):
-        Button.__init__(self, gpio_number)
+    def __init__(self, gpio_number, mpris_manager):
+        Button.__init__(self, gpio_number, mpris_manager)
 
     def on_press(self, channel):
         Button.on_press(self, channel)
-        self.spotifyd_player.play_pause()
+        self.mpris_manager.play_pause()
 
 
 class NextButton(Button):
-    def __init__(self, gpio_number):
-        Button.__init__(self, gpio_number)
+    def __init__(self, gpio_number, mpris_manager):
+        Button.__init__(self, gpio_number, mpris_manager)
 
     def on_press(self, channel):
         Button.on_press(self, channel)
-        self.spotifyd_player.next()
+        self.mpris_manager.next_song()
 
 
 class PreviousButton(Button):
-    def __init__(self, gpio_number):
-        Button.__init__(self, gpio_number)
+    def __init__(self, gpio_number, mpris_manager):
+        Button.__init__(self, gpio_number, mpris_manager)
 
     def on_press(self, channel):
         Button.on_press(self, channel)
-        self.spotifyd_player.previous()
+        self.mpris_manager.previous_song()
