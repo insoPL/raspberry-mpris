@@ -13,8 +13,8 @@ def main():
     mopidy_player = MprisController("mopidy")
 
     while True:
-        print(spotifyd_player.get_status())
-        sleep(1)
+        print(mopidy_player.get_status())
+        time.sleep(1)
 
 if __name__ == '__main__':
     GPIO.setwarnings(False)

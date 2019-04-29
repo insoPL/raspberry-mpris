@@ -29,5 +29,5 @@ class MprisController:
         return self._raw_property("LoopStatus")
 
     def _raw_property(self, name):
-        meta = self.Get('org.mpris.MediaPlayer2.Player', name)
+        meta = self.properties.Get('org.mpris.MediaPlayer2.Player', name)
         return meta
