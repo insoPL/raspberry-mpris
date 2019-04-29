@@ -4,7 +4,7 @@ import logging
 import time
 
 
-class MprisController:
+class MprisManger:
     def __init__(self):
         self.current_player = ""
         self.spotifyd_player = MprisController("spotifyd")
@@ -22,11 +22,10 @@ def main():
     #next_button = NextButton(40)
     #previous_button = PreviousButton(36)
 
-    spotifyd_player = MprisController("spotifyd")
-    mopidy_player = MprisController("mopidy")
+    mpris_manager = MprisMangager()
 
     while True:
-        print(mopidy_player.get_status())
+        print(mpris_manager.check_player())
         time.sleep(5)
 
 if __name__ == '__main__':
