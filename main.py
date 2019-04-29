@@ -1,5 +1,6 @@
 import RPi.GPIO as GPIO
-from raspris import Button, MprisManger
+from mpris_manager import MprisManger
+from button import Button
 import logging
 import time
 
@@ -12,7 +13,7 @@ def main():
 
     while True:
         mpris_manager.check_player()
-        time.sleep(3)
+        time.sleep(1)
 
 if __name__ == '__main__':
     GPIO.setwarnings(False)
