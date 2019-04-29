@@ -1,2 +1,2 @@
-from .rpi_buttons import PreviousButton, PlayButton, NextButton
+from .rpi_buttons import Button
 from .mpris_controller import MprisManger

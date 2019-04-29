@@ -1,15 +1,14 @@
 import RPi.GPIO as GPIO
-from raspris import PreviousButton, PlayButton, NextButton, MprisManger
+from raspris import Button, MprisManger
 import logging
 import time
 
 
 def main():
     mpris_manager = MprisManger()
-
-    play_button = PlayButton(38, mpris_manager)
-    next_button = NextButton(36, mpris_manager)
-    previous_button = PreviousButton(40, mpris_manager)
+    next_button = Button(40, lambda : mpris_manager.next_song())
+    play_button = Button(38, lambda : mpris_manager.play_pause())
+    prev_button = Button(36, lambda : mpris_manager.previous_song())
 
     while True:
         mpris_manager.check_player()
