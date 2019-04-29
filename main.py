@@ -1,14 +1,20 @@
 import RPi.GPIO as GPIO
-from raspris import PreviousButton, PlayButton, NextButton
+from raspris import PreviousButton, PlayButton, NextButton, MprisController
 import logging
+import time
+
 
 def main():
-    play_button = PlayButton(38)
-    next_button = NextButton(40)
-    previous_button = PreviousButton(36)
-    message = input("Press enter to quit\n\n")
-    return "text"
+    #play_button = PlayButton(38)
+    #next_button = NextButton(40)
+    #previous_button = PreviousButton(36)
 
+    spotifyd_player = MprisController("spotifyd")
+    mopidy_player = MprisController("mopidy")
+
+    while True:
+        print(spotifyd_player.get_status())
+        sleep(1)
 
 if __name__ == '__main__':
     GPIO.setwarnings(False)

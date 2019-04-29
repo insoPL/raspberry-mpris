@@ -25,6 +25,9 @@ class MprisController:
         self.player.Previous()
         logging.info("[%s] Previous" % self.player_name)
 
+    def get_status(self):
+        return self._raw_property("LoopStatus")
+
     def _raw_property(self, name):
         meta = self.Get('org.mpris.MediaPlayer2.Player', name)
         return meta
