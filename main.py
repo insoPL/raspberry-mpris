@@ -12,10 +12,16 @@ class MprisManger:
         self.players["mopidy"] = MprisController("mopidy")
 
     def check_player(self):
-        for name, player in players:
-            if self.current_player != name and player.get_status == "Playing":
-                self.players[self.current_player].play_pause()
-                self.current_player = name
+        for name, player in self.players.items():
+            if player.get_status == "Playing":
+                if self.current_player == "":
+                    self.current_player = name
+                    return self.current_player
+                elif self.current_player != name:
+                    self.players[self.current_player].play_pause()
+                    self.current_player = name
+                    return self.current_player
+        self.current_player = ""
         return self.current_player
 
 
