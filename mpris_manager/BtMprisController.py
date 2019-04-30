@@ -1,4 +1,5 @@
 import logging
+import dbus
 
 class BtMprisController:
     def __init__(self, player_name):

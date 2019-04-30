@@ -1,13 +1,15 @@
 from mpris_controller import MprisController
 from BtMprisController import BtMprisController
+import logging
+
 class MprisManger:
     def __init__(self):
         self.last_player = "mopidy"
         self.silence = True
         self.players = dict()
+        self.players["BtMpris"] = BtMprisController("BtMpris")
         self.players["spotifyd"] = MprisController("spotifyd")
         self.players["mopidy"] = MprisController("mopidy")
-        self.players["BtMpris"] = BtMprisController("BtMpris")
 
     def check_player(self):
         for name, player in self.players.items():
