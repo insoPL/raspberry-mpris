@@ -13,7 +13,7 @@ def main():
 
     while True:
         mpris_manager.check_player()
-        time.sleep(1)
+        time.sleep(1/2)
 
 if __name__ == '__main__':
     GPIO.setwarnings(False)

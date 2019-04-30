@@ -32,5 +32,9 @@ class MprisController:
         return self._raw_property("PlaybackStatus").lower()
 
     def _raw_property(self, name):
-        meta = self.properties.Get('org.mpris.MediaPlayer2.Player', name)
+        try:
+            meta = self.properties.Get('org.mpris.MediaPlayer2.Player', name)
+        except dbus.exceptions.DBusException:
+            return "Paused"
+
         return meta

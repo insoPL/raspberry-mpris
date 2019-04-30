@@ -33,5 +33,9 @@ class BtMprisController:
         return self._raw_property("Status").lower()
 
     def _raw_property(self, name):
-        meta = self.properties.Get('org.bluez.MediaPlayer1', name)
+        try:
+            meta = self.properties.Get('org.bluez.MediaPlayer1', name)
+        except dbus.exceptions.DBusException:
+            return "Paused"
+
         return meta
