@@ -1,5 +1,6 @@
 import dbus
 import logging
+from .dbus_tools import except_dbus_error
 
 class MprisController:
     def __init__(self, player_name):
@@ -12,18 +13,22 @@ class MprisController:
         self.properties = dbus.Interface(proxy, 'org.freedesktop.DBus.Properties')
         logging.info("succesfully opened dbus for"+self.player_name)
 
+    @except_dbus_error
     def play_pause(self):
         self.player.PlayPause()
         logging.info("[%s] Play/Paused" % self.player_name)
 
+    @except_dbus_error
     def pause(self):
         self.player.Pause()
         logging.info("[%s] Paused" % self.player_name)
 
+    @except_dbus_error
     def next_song(self):
         self.player.Next()
         logging.info("[%s] Next" % self.player_name)
 
+    @except_dbus_error
     def previous_song(self):
         self.player.Previous()
         logging.info("[%s] Previous" % self.player_name)

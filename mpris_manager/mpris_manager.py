@@ -2,6 +2,7 @@ from mpris_controller import MprisController
 from BtMprisController import BtMprisController
 import logging
 
+
 class MprisManger:
     def __init__(self):
         self.last_player = "mopidy"
