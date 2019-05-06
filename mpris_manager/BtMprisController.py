@@ -1,12 +1,37 @@
 import logging
+from functools import wraps
+
 import dbus
-from .dbus_tools import except_dbus_error
+
+def except_dbus_error(func):
+    @wraps(func)
+    def func_wrapper(*args, **kwargs):
+        self = args[0]
+        try:
+            if self.player is None or self.properties is None:
+                raise dbus.exceptions.DBusException
+            return func(*args, **kwargs)
+        except dbus.exceptions.DBusException:
+            try:
+                self.initialize()
+                return func(*args, **kwargs)
+            except dbus.exceptions.DBusException:
+                return None
+    return func_wrapper
 
 class BtMprisController:
     def __init__(self, player_name):
         self.player_name = player_name
+        self.player = None
+        self.properties = None
+        try:
+            self.initialize()
+        except dbus.exceptions.DBusException:
+            pass
+
+    def initialize(self):
         system_bus = dbus.SystemBus()
-        proxy = system_bus.get_object('org.bluez', self._find_player_path())
+        proxy = system_bus.get_object('org.bluez',self._find_player_path())
 
         self.player = dbus.Interface(proxy, dbus_interface='org.bluez.MediaPlayer1')
         self.properties = dbus.Interface(proxy, 'org.freedesktop.DBus.Properties')
@@ -36,25 +61,19 @@ class BtMprisController:
         self.player.Previous()
         logging.info("[%s] Previous dbus sent" % self.player_name)
 
+    @except_dbus_error
     def get_status(self):
-        return self._raw_property("Status").lower()
+            return self._raw_property("Status")
 
     def _raw_property(self, name):
-        try:
-            meta = self.properties.Get('org.bluez.MediaPlayer1', name)
+        return self.properties.Get('org.bluez.MediaPlayer1', name).lower()
 
-        except dbus.exceptions.DBusException:
-            return "Paused"
-
-        return meta
-
-    @except_dbus_error
     def _find_player_path(self):
         bus = dbus.SystemBus()
         manager = dbus.Interface(bus.get_object("org.bluez", "/"), "org.freedesktop.DBus.ObjectManager")
         objects = manager.GetManagedObjects()
         objects = [str(key) for key in objects.keys() if str(key)[-7:] == "player0"]
         if len(objects) == 0:
-            logging.warn("[%s] No Devices to connect" % self.player_name)
+            raise dbus.exceptions.DBusException
         else:
             return objects[0]

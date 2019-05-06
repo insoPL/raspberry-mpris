@@ -1,23 +1,35 @@
+# coding=utf-8
+
 import RPi.GPIO as GPIO
 from mpris_manager import MprisManger
 from button import Button
 import logging
 import time
 
+from lcd_manager import LcdManager
+
+NEXT_BUTTON = 17
+PLAY_BUTTON = 4
+PREV_BUTTON = 16
+
 
 def main():
     mpris_manager = MprisManger()
-    next_button = Button(40, lambda : mpris_manager.next_song())
-    play_button = Button(38, lambda : mpris_manager.play_pause())
-    prev_button = Button(36, lambda : mpris_manager.previous_song())
+    next_button = Button(NEXT_BUTTON, lambda : mpris_manager.next_song())
+    play_button = Button(PLAY_BUTTON, lambda : mpris_manager.play_pause())
+    prev_button = Button(PREV_BUTTON, lambda : mpris_manager.previous_song())
+
+    lcd_manager = LcdManager()
 
     while True:
         mpris_manager.check_player()
-        time.sleep(1/2)
+        status = mpris_manager.get_status()
+        lcd_manager.set_text("yo", status.upper())
+        time.sleep(1)
 
 if __name__ == '__main__':
     GPIO.setwarnings(False)
-    GPIO.setmode(GPIO.BOARD)
+    GPIO.setmode(GPIO.BCM)
     logging.info("GPIO successfully initiated")
 
     logging.getLogger().setLevel(logging.INFO)
@@ -26,5 +38,6 @@ if __name__ == '__main__':
     except KeyboardInterrupt:
         pass
     finally:
+        LcdManager.close()
         GPIO.cleanup()
         logging.info("good bye")
