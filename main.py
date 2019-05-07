@@ -21,11 +21,19 @@ def main():
 
     lcd_manager = LcdManager()
 
-    while True:
-        mpris_manager.check_player()
-        meta = mpris_manager.get_meta()
-        lcd_manager.set_by_meta(meta)
-        time.sleep(1/2)
+    try:
+        while True:
+            mpris_manager.check_player()
+            meta = mpris_manager.get_meta()
+            lcd_manager.set_by_meta(meta)
+            time.sleep(1/2)
+    except KeyboardInterrupt:
+        pass
+    finally:
+        lcd_manager.close()
+        GPIO.cleanup()
+        logging.info("good bye")
+
 
 if __name__ == '__main__':
     GPIO.setwarnings(False)
@@ -33,11 +41,4 @@ if __name__ == '__main__':
     logging.info("GPIO successfully initiated")
 
     logging.getLogger().setLevel(logging.INFO)
-    try:
-        main()
-    except KeyboardInterrupt:
-        pass
-    finally:
-        LcdManager.close()
-        GPIO.cleanup()
-        logging.info("good bye")
+    main()

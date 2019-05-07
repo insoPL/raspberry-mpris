@@ -65,8 +65,32 @@ class BtMprisController:
     def get_status(self):
             return self._raw_property("Status")
 
+    def get_meta(self):
+        def adjust_time_to_player(time):
+            time /= 1000
+            return int(time)
+
+        title, artists, length, position = "","","0","0"
+
+        meta = self._raw_property("Track")
+        assert isinstance(meta, dict)
+        for key, value in meta.items():
+            if "Title" in key:
+                title = value
+            elif "Artist" in key:
+                artists = value
+            elif "Duration" in key:
+                length = adjust_time_to_player(value)
+        position = self._raw_property("Position")
+        position = adjust_time_to_player(position)
+
+        if title == "":
+            logging.warn("empty meta")
+
+        return title,artists, length, position
+
     def _raw_property(self, name):
-        return self.properties.Get('org.bluez.MediaPlayer1', name).lower()
+        return self.properties.Get('org.bluez.MediaPlayer1', name)
 
     def _find_player_path(self):
         bus = dbus.SystemBus()

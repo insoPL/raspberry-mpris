@@ -1,9 +1,12 @@
-from lcd_codes import *
-import logging
+# coding=utf-8
+from RPLCD.gpio import CharLCD
+import RPi.GPIO as GPIO
+from unidecode import unidecode
 
 class LcdManager:
     def __init__(self):
-        lcd_init()
+        self.lcd = CharLCD(pin_rs=20, pin_e=21, pins_data=[6, 13, 19, 26], auto_linebreaks=False, numbering_mode=GPIO.BCM, cols=16)
+
         self.line1 = "Welcome"
         self.line2 = "   Home"
 
@@ -14,12 +17,13 @@ class LcdManager:
         self.update_screen()
 
     def update_screen(self):
-        lcd_string(self.line1, LCD_LINE_1)
-        lcd_string(self.line2, LCD_LINE_2)
+        self.lcd.cursor_pos = (0,0)
+        self.lcd.write_string(self.line1[:15])
+        self.lcd.cursor_pos = (1,0)
+        self.lcd.write_string(self.line2[:15])
 
-    @staticmethod
-    def close():
-        lcd_byte(0x01, LCD_CMD)
+    def close(self):
+        self.lcd.close(clear=True)
 
     def set_by_meta(self, meta):
         def pretty_sec(time_in_sec):
@@ -29,6 +33,6 @@ class LcdManager:
 
         title,artists, length, position, player = meta
 
-        line1 = title+" - "+artists
+        line1 = unidecode(title)+" - "+unidecode(artists)
         line2 = pretty_sec(position)+"/"+pretty_sec(length)+"  [%s]"%player[0].upper()
         self.set_text(line1, line2)

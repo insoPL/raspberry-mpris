@@ -1,7 +1,6 @@
 import dbus
 import logging
 from .dbus_tools import except_dbus_error
-from unidecode import unidecode
 
 class MprisController:
     def __init__(self, player_name):
@@ -51,18 +50,16 @@ class MprisController:
         assert isinstance(meta, dict)
         for key, value in meta.items():
             if "title" in key:
-                title = unidecode(value)
+                title = value
             elif "artist" in key:
-                artists = unidecode(", ".join(value))
+                artists = ", ".join(value)
             elif "length" in key:
                 length = adjust_time_to_player(value)
         position = self._raw_property("Position")
         position = adjust_time_to_player(position)
 
-
         if title == "":
             logging.warn("empty meta")
-
 
         return title,artists, length, position
 
