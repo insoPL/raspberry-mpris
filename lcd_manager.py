@@ -2,25 +2,17 @@
 from RPLCD.gpio import CharLCD
 import RPi.GPIO as GPIO
 from unidecode import unidecode
+from moving_line import Line
 
 class LcdManager:
+    LCD_WIDTH = 16
     def __init__(self):
-        self.lcd = CharLCD(pin_rs=20, pin_e=21, pins_data=[6, 13, 19, 26], auto_linebreaks=False, numbering_mode=GPIO.BCM, cols=16)
+        self.lcd = CharLCD(pin_rs=20, pin_e=21, pins_data=[6, 13, 19, 26], auto_linebreaks=True, numbering_mode=GPIO.BCM, cols=self.LCD_WIDTH)
 
-        self.line1 = "Welcome"
-        self.line2 = "   Home"
-
-
-    def set_text(self, line1, line2):
-        self.line1 = line1
-        self.line2 = line2
-        self.update_screen()
-
-    def update_screen(self):
-        self.lcd.cursor_pos = (0,0)
-        self.lcd.write_string(self.line1[:15])
-        self.lcd.cursor_pos = (1,0)
-        self.lcd.write_string(self.line2[:15])
+        self.lines = [
+            Line('This string is too long to fit', self.LCD_WIDTH),
+            Line('test', self.LCD_WIDTH)
+        ]
 
     def close(self):
         self.lcd.close(clear=True)
@@ -33,6 +25,12 @@ class LcdManager:
 
         title,artists, length, position, player = meta
 
-        line1 = unidecode(title)+" - "+unidecode(artists)
-        line2 = pretty_sec(position)+"/"+pretty_sec(length)+"  [%s]"%player[0].upper()
-        self.set_text(line1, line2)
+        self.lines[0].set_text(" - ".join((unidecode(title),unidecode(artists))))
+        self.lines[1].set_text(pretty_sec(position)+"/"+pretty_sec(length)+"  [%s]" % player[0].upper())
+
+    def update(self):
+        i = 0
+        for line in self.lines:
+            self.lcd.cursor_pos = (i, 0)
+            self.lcd.write_string(str(line))
+            i += 1
