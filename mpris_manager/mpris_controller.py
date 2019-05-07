@@ -1,6 +1,7 @@
 import dbus
 import logging
 from .dbus_tools import except_dbus_error
+from unidecode import unidecode
 
 class MprisController:
     def __init__(self, player_name):
@@ -35,6 +36,38 @@ class MprisController:
 
     def get_status(self):
         return self._raw_property("PlaybackStatus").lower()
+
+    def get_meta(self):
+        def adjust_time_to_player(time):
+            if self.player_name == "mopidy":
+                time /= 1000000
+            elif self.player_name == "spotifyd":
+                time /= 1000
+            return int(time)
+
+        title, artists, length, position = "","","0","0"
+
+        meta = self._raw_property("Metadata")
+        assert isinstance(meta, dict)
+        for key, value in meta.items():
+            if "title" in key:
+                title = unidecode(value)
+            elif "artist" in key:
+                artists = unidecode(", ".join(value))
+            elif "length" in key:
+                length = adjust_time_to_player(value)
+        position = self._raw_property("Position")
+        position = adjust_time_to_player(position)
+
+
+        if title == "":
+            logging.warn("empty meta")
+
+
+        return title,artists, length, position
+
+    def get_position(self):
+        return self._raw_property("Position")
 
     def _raw_property(self, name):
         try:

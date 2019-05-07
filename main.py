@@ -23,9 +23,9 @@ def main():
 
     while True:
         mpris_manager.check_player()
-        status = mpris_manager.get_status()
-        lcd_manager.set_text("yo", status.upper())
-        time.sleep(1)
+        meta = mpris_manager.get_meta()
+        lcd_manager.set_by_meta(meta)
+        time.sleep(1/2)
 
 if __name__ == '__main__':
     GPIO.setwarnings(False)

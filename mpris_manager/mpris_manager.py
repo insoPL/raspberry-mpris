@@ -36,3 +36,8 @@ class MprisManger:
 
     def get_status(self):
         return self.players[self.last_player].get_status()
+
+    def get_meta(self):
+        meta = list(self.players[self.last_player].get_meta())
+        meta.append(self.last_player)
+        return tuple(meta)
