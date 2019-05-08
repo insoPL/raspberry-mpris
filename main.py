@@ -2,13 +2,12 @@
 
 import RPi.GPIO as GPIO
 from mpris_manager import MprisManger
+from lcd_manager import LcdManager
 from button import Button
 import logging
 import time
 from timeloop import Timeloop
 from datetime import timedelta
-
-from lcd_manager import LcdManager
 
 NEXT_BUTTON = 17 # BCM Pins for buttons
 PLAY_BUTTON = 4
@@ -32,14 +31,16 @@ tl = Timeloop()
 def main():
     mpris_manager.check_player()
 
-@tl.job(interval=timedelta(seconds=5))
-def show_song_info():
-    meta = mpris_manager.get_meta()
-    lcd_manager.set_by_meta(meta)
-
 @tl.job(interval=timedelta(seconds=1))
-def update_screen():
+def update_lcd():
+    timer_line = mpris_manager.meta_player.get_timer_line()
+    player_line = mpris_manager.meta_player.get_player_line()
+    lcd_manager.set_lines(timer_line, player_line)
     lcd_manager.update()
+
+@tl.job(interval=timedelta(seconds=10))
+def force_update_manager():
+    mpris_manager.update_meta()
 
 tl.start()
 

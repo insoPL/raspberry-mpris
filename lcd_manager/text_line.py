@@ -1,4 +1,4 @@
-class Line(object):
+class TextLine(object):
     DEAD_SPACES = 4
     def __init__(self, text, width):
         self.text = ""

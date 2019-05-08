@@ -1,6 +1,7 @@
 from mpris_controller import MprisController
 from BtMprisController import BtMprisController
 import logging
+from meta_player import MetaPlayer
 
 
 class MprisManger:
@@ -11,6 +12,8 @@ class MprisManger:
         self.players["BtMpris"] = BtMprisController("BtMpris")
         self.players["spotifyd"] = MprisController("spotifyd")
         self.players["mopidy"] = MprisController("mopidy")
+        self.meta_player = MetaPlayer()
+
 
     def check_player(self):
         for name, player in self.players.items():
@@ -34,10 +37,9 @@ class MprisManger:
     def previous_song(self):
         self.players[self.last_player].previous_song()
 
-    def get_status(self):
-        return self.players[self.last_player].get_status()
+    def update_meta(self):
+        meta = self.players[self.last_player].get_meta()
+        self.meta_player.set_by_meta(meta)
+        self.meta_player.player = self.last_player
+        self.meta_player.status = self.players[self.last_player].get_status()
 
-    def get_meta(self):
-        meta = list(self.players[self.last_player].get_meta())
-        meta.append(self.last_player)
-        return tuple(meta)
