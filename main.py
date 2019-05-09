@@ -8,6 +8,7 @@ import logging
 import time
 from timeloop import Timeloop
 from datetime import timedelta
+from context_manager import ScreenSaverContext, PlayerContext
 
 NEXT_BUTTON = 17 # BCM Pins for buttons
 PLAY_BUTTON = 4
@@ -25,22 +26,22 @@ prev_button = Button(PREV_BUTTON, lambda : mpris_manager.previous_song())
 
 lcd_manager = LcdManager()
 
+def_screen = ScreenSaverContext()
+meta_player = PlayerContext()
+
 tl = Timeloop()
 
 @tl.job(interval=timedelta(seconds=1))
-def main():
-    mpris_manager.check_player()
-
-@tl.job(interval=timedelta(seconds=1))
 def update_lcd():
-    timer_line = mpris_manager.meta_player.get_timer_line()
-    player_line = mpris_manager.meta_player.get_player_line()
-    lcd_manager.set_lines(timer_line, player_line)
+    mpris_manager.check_player()
+    if mpris_manager.timeout_timer<5:
+        meta = mpris_manager.get_meta()
+        meta_player.set_by_meta(meta)
+        lines = meta_player.get_lines()
+    else:
+        lines = def_screen.get_lines()
+    lcd_manager.set_lines(*lines)
     lcd_manager.update()
-
-@tl.job(interval=timedelta(seconds=10))
-def force_update_manager():
-    mpris_manager.update_meta()
 
 tl.start()
 
