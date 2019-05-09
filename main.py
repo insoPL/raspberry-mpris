@@ -31,10 +31,11 @@ meta_player = PlayerContext()
 
 tl = Timeloop()
 
+
 @tl.job(interval=timedelta(seconds=1))
 def update_lcd():
     mpris_manager.check_player()
-    if mpris_manager.timeout_timer<5:
+    if mpris_manager.timeout_timer<1:
         meta = mpris_manager.get_meta()
         meta_player.set_by_meta(meta)
         lines = meta_player.get_lines()
@@ -42,6 +43,12 @@ def update_lcd():
         lines = def_screen.get_lines()
     lcd_manager.set_lines(*lines)
     lcd_manager.update()
+
+
+@tl.job(interval=timedelta(minutes=5))
+def update_context():
+    def_screen.update_furnce()
+    def_screen.update_weather()
 
 tl.start()
 
