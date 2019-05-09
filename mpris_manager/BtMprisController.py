@@ -3,6 +3,7 @@ from functools import wraps
 
 import dbus
 
+
 def except_dbus_error(func):
     @wraps(func)
     def func_wrapper(*args, **kwargs):

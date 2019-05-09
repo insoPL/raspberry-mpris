@@ -30,7 +30,7 @@ class PlayerContext:
 
         timer_str = self._pretty_sec(self.position) + "/" + self._pretty_sec(self.length)
         player_str = "[%s]" % self.player[0].upper()
-        return (playing_status+" "+timer_str+" "+player_str).center(16)
+        return playing_status+" "+timer_str+" "+player_str
 
     def get_player_line(self):
         return " - ".join((unidecode(self.title), unidecode(self.artists)))

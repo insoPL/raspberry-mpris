@@ -1,5 +1,6 @@
 class TextLine(object):
     DEAD_SPACES = 4
+
     def __init__(self, text, width):
         self.text = ""
         self.animated = False
@@ -24,7 +25,7 @@ class TextLine(object):
             return self.text
 
         framebuffer = self.text[self.i:self.width+self.i]
-        self.i+=1
-        if self.i>len(self.text)-self.width:
-            self.i=0
+        self.i += 1
+        if self.i > len(self.text)-self.width:
+            self.i = 0
         return framebuffer

@@ -2,6 +2,7 @@ import dbus
 import logging
 from .dbus_tools import except_dbus_error
 
+
 class MprisController:
     def __init__(self, player_name):
         self.player_name = player_name

@@ -21,7 +21,7 @@ class ScreenSaverContext:
         self.update_furnce()
 
     def get_lines(self):
-        return self.get_time_line().center(16), self.get_weather_line()
+        return self.get_time_line(), self.get_weather_line()
 
     def get_time_line(self):
         time_string = time.strftime("%H:%M %d/%m", time.localtime())

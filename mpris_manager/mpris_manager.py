@@ -1,7 +1,7 @@
-from mpris_controller import MprisController
-from BtMprisController import BtMprisController
 import logging
-from context_manager.player_context import PlayerContext
+
+from BtMprisController import BtMprisController
+from mpris_controller import MprisController
 
 
 class MprisManger:
@@ -13,7 +13,6 @@ class MprisManger:
         self.players["BtMpris"] = BtMprisController("BtMpris")
         self.players["spotifyd"] = MprisController("spotifyd")
         self.players["mopidy"] = MprisController("mopidy")
-
 
     def check_player(self):
         self.all_paused = True
