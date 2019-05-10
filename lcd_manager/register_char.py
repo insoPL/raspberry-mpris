@@ -1,6 +1,6 @@
 
 register_char = [
-    [ # play
+    [  # play
         0b01000,
         0b01100,
         0b01110,
@@ -10,7 +10,7 @@ register_char = [
         0b01100,
         0b01000
     ],
-    [ # pause
+    [  # pause
         0b11011,
         0b11011,
         0b11011,
@@ -20,7 +20,7 @@ register_char = [
         0b11011,
         0b11011
     ],
-    [ # Celc
+    [  # Celc
         0b01000,
         0b10100,
         0b01011,
