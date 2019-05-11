@@ -1,13 +1,22 @@
 import dbus
 import logging
-from .dbus_tools import except_dbus_error
+from dbus_tools import except_dbus_error
 
 
 class MprisController:
     def __init__(self, player_name):
         self.player_name = player_name
+        self.player = None
+        self.properties = None
+
         if self.player_name != "mopidy" and self.player_name != "spotifyd": raise ValueError
 
+        try:
+            self.initialize()
+        except dbus.exceptions.DBusException:
+            pass
+
+    def initialize(self):
         system_bus = dbus.SystemBus()
         proxy = system_bus.get_object('org.mpris.MediaPlayer2.'+self.player_name, '/org/mpris/MediaPlayer2')
         self.player = dbus.Interface(proxy, dbus_interface='org.mpris.MediaPlayer2.Player')
@@ -34,6 +43,7 @@ class MprisController:
         self.player.Previous()
         logging.info("[%s] Previous" % self.player_name)
 
+    @except_dbus_error
     def get_status(self):
         return self._raw_property("PlaybackStatus").lower()
 
@@ -59,18 +69,10 @@ class MprisController:
         position = self._raw_property("Position")
         position = adjust_time_to_player(position)
 
-        if title == "":
-            logging.warn("empty meta")
-
         return title,artists, length, position
 
     def get_position(self):
         return self._raw_property("Position")
 
     def _raw_property(self, name):
-        try:
-            meta = self.properties.Get('org.mpris.MediaPlayer2.Player', name)
-        except dbus.exceptions.DBusException:
-            return "Paused"
-
-        return meta
+        return self.properties.Get('org.mpris.MediaPlayer2.Player', name)

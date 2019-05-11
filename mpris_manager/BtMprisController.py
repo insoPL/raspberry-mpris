@@ -1,30 +1,14 @@
 import logging
-from functools import wraps
-
 import dbus
+from dbus_tools import except_dbus_error
 
-
-def except_dbus_error(func):
-    @wraps(func)
-    def func_wrapper(*args, **kwargs):
-        self = args[0]
-        try:
-            if self.player is None or self.properties is None:
-                raise dbus.exceptions.DBusException
-            return func(*args, **kwargs)
-        except dbus.exceptions.DBusException:
-            try:
-                self.initialize()
-                return func(*args, **kwargs)
-            except dbus.exceptions.DBusException:
-                return None
-    return func_wrapper
 
 class BtMprisController:
     def __init__(self, player_name):
         self.player_name = player_name
         self.player = None
         self.properties = None
+
         try:
             self.initialize()
         except dbus.exceptions.DBusException:
@@ -33,7 +17,6 @@ class BtMprisController:
     def initialize(self):
         system_bus = dbus.SystemBus()
         proxy = system_bus.get_object('org.bluez',self._find_player_path())
-
         self.player = dbus.Interface(proxy, dbus_interface='org.bluez.MediaPlayer1')
         self.properties = dbus.Interface(proxy, 'org.freedesktop.DBus.Properties')
         logging.info("succesfully opened dbus for"+self.player_name)
@@ -64,8 +47,9 @@ class BtMprisController:
 
     @except_dbus_error
     def get_status(self):
-            return self._raw_property("Status")
+        return self._raw_property("Status").lower()
 
+    @except_dbus_error
     def get_meta(self):
         def adjust_time_to_player(time):
             time /= 1000
@@ -84,9 +68,6 @@ class BtMprisController:
                 length = adjust_time_to_player(value)
         position = self._raw_property("Position")
         position = adjust_time_to_player(position)
-
-        if title == "":
-            logging.warn("empty meta")
 
         return title,artists, length, position
 

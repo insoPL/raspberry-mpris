@@ -33,7 +33,12 @@ class PlayerContext:
         return playing_status+" "+timer_str+" "+player_str
 
     def get_player_line(self):
-        return " - ".join((unidecode(self.title), unidecode(self.artists)))
+        title = unidecode(self.title)
+        artists = unidecode(self.artists)
+        if title == "":
+            return artists
+        else:
+            return " - ".join((title, artists))
 
     def _pretty_sec(self, time_in_sec):
         time_in_sec = int(time_in_sec)

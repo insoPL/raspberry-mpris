@@ -36,7 +36,7 @@ class ScreenSaverContext:
         url = "https://api.openweathermap.org/data/2.5/weather?q={}&units=metric&appid={}&lang={}".format(location, api_key, lang)
 
         try:
-            r = requests.get(url, timeout=0.3)
+            r = requests.get(url, timeout=0.6)
             j = r.json()
             self.desc = unidecode(j['weather'][0]['description'])
             self.temp = int(j['main']['temp'])
