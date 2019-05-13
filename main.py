@@ -12,7 +12,7 @@ from lcd_manager import LcdManager
 from mpris_manager import MprisManger
 
 config = configparser.ConfigParser()
-config.read('config.ini')
+config.read('/home/pi/raspberry-mpris/config.ini')
 config = config['main_options']
 
 logging.getLogger().setLevel(logging.INFO)

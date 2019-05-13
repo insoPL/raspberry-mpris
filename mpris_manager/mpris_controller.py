@@ -9,8 +9,6 @@ class MprisController:
         self.player = None
         self.properties = None
 
-        if self.player_name != "mopidy" and self.player_name != "spotifyd": raise ValueError
-
         try:
             self.initialize()
         except dbus.exceptions.DBusException:
@@ -47,6 +45,7 @@ class MprisController:
     def get_status(self):
         return self._raw_property("PlaybackStatus").lower()
 
+    @except_dbus_error
     def get_meta(self):
         def adjust_time_to_player(time):
             if self.player_name == "mopidy":
@@ -71,6 +70,7 @@ class MprisController:
 
         return title,artists, length, position
 
+    @except_dbus_error
     def get_position(self):
         return self._raw_property("Position")
 

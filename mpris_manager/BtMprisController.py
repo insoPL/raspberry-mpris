@@ -1,18 +1,12 @@
 import logging
 import dbus
 from dbus_tools import except_dbus_error
+from .mpris_controller import MprisController
 
 
-class BtMprisController:
+class BtMprisController(MprisController):
     def __init__(self, player_name):
-        self.player_name = player_name
-        self.player = None
-        self.properties = None
-
-        try:
-            self.initialize()
-        except dbus.exceptions.DBusException:
-            pass
+        MprisController.__init__(self, player_name)
 
     def initialize(self):
         system_bus = dbus.SystemBus()
@@ -29,21 +23,6 @@ class BtMprisController:
         else:
             self.player.Play()
             logging.info("[%s] Play dbus sent" % self.player_name)
-
-    @except_dbus_error
-    def pause(self):
-        self.player.Pause()
-        logging.info("[%s] Pause dbus sent" % self.player_name)
-
-    @except_dbus_error
-    def next_song(self):
-        self.player.Next()
-        logging.info("[%s] Next dbus sent" % self.player_name)
-
-    @except_dbus_error
-    def previous_song(self):
-        self.player.Previous()
-        logging.info("[%s] Previous dbus sent" % self.player_name)
 
     @except_dbus_error
     def get_status(self):

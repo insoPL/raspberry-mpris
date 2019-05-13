@@ -8,7 +8,7 @@ class MprisManger:
     def __init__(self):
         self.last_player = "mopidy"
         self.all_paused = True
-        self.timeout_timer = 0
+        self.timeout_timer = 1000000
         self.players = dict()
         self.players["BtMpris"] = BtMprisController("BtMpris")
         self.players["spotifyd"] = MprisController("spotifyd")

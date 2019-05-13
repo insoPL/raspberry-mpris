@@ -10,7 +10,7 @@ from text_line import TextLine
 class LcdManager:
     def __init__(self):
         config = configparser.ConfigParser()
-        config.read('config.ini')
+        config.read('/home/pi/raspberry-mpris/config.ini')
         config = config['lcd_manager']
 
         self.lcd_width = int(config['width'])
