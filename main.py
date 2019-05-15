@@ -20,7 +20,7 @@ GPIO.setwarnings(False)
 GPIO.setmode(GPIO.BCM)
 logging.info("GPIO successfully initiated")
 
-mpris_manager = MprisManger()
+mpris_manager = MprisManger(config)
 next_button = Button(int(config["next_buttons"]), lambda : mpris_manager.next_song())
 play_button = Button(int(config["play_buttons"]), lambda : mpris_manager.play_pause())
 prev_button = Button(int(config["prev_buttons"]), lambda : mpris_manager.previous_song())
@@ -32,9 +32,8 @@ meta_player = PlayerContext()
 
 
 def update_lcd():
-    mpris_manager.check_player()
-    if mpris_manager.timeout_timer < int(config["screen_saver_timeout"]):
-        meta = mpris_manager.get_meta()
+    meta = mpris_manager.get_meta()
+    if meta != "timeout":
         meta_player.set_by_meta(meta)
         lines = meta_player.get_lines()
     else:

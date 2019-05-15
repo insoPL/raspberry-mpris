@@ -47,12 +47,6 @@ class MprisController:
 
     @except_dbus_error
     def get_meta(self):
-        def adjust_time_to_player(time):
-            if self.player_name == "mopidy":
-                time /= 1000000
-            elif self.player_name == "spotifyd":
-                time /= 1000
-            return int(time)
 
         title, artists, length, position = "","","0","0"
 
@@ -64,11 +58,14 @@ class MprisController:
             elif "artist" in key:
                 artists = ", ".join(value)
             elif "length" in key:
-                length = adjust_time_to_player(value)
+                length = self.adjust_time_to_player(value)
         position = self._raw_property("Position")
-        position = adjust_time_to_player(position)
+        position = self.adjust_time_to_player(position)
 
         return title,artists, length, position
+
+    def quit(self):
+        pass
 
     @except_dbus_error
     def get_position(self):
@@ -76,3 +73,7 @@ class MprisController:
 
     def _raw_property(self, name):
         return self.properties.Get('org.mpris.MediaPlayer2.Player', name)
+
+    @staticmethod
+    def adjust_time_to_player(time):
+        return int(time / 1000)
