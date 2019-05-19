@@ -1,6 +1,5 @@
 # coding=utf-8
 import RPi.GPIO as GPIO
-import configparser
 from RPLCD.gpio import CharLCD
 
 from register_char import register_char
@@ -8,9 +7,7 @@ from text_line import TextLine
 
 
 class LcdManager:
-    def __init__(self):
-        config = configparser.ConfigParser()
-        config.read('/home/pi/raspberry-mpris/config.ini')
+    def __init__(self, config):
         config = config['lcd_manager']
 
         self.lcd_width = int(config['width'])

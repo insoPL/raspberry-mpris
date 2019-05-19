@@ -2,16 +2,14 @@ import logging
 import time
 from xml.etree import ElementTree
 
-import configparser
 import requests
+import w1thermsensor
 from requests.auth import HTTPBasicAuth
 from unidecode import unidecode
 
 
 class ScreenSaverContext:
-    def __init__(self):
-        config = configparser.ConfigParser()
-        config.read('/home/pi/raspberry-mpris/config.ini')
+    def __init__(self, config):
         self.config = config['screen_saver']
 
         self.temp = ""
@@ -26,7 +24,7 @@ class ScreenSaverContext:
 
     def get_time_line(self):
         time_string = time.strftime("%d/%m %H:%M", time.localtime())
-        return time_string+" "+str(self.co)+'\x02'
+        return time_string+" "+str(self.co)
 
     def get_weather_line(self):
         return self.desc + " " + str(self.temp) + '\x02'
@@ -40,14 +38,21 @@ class ScreenSaverContext:
         try:
             r = requests.get(url, timeout=1)
             j = r.json()
-            self.desc = unidecode(j['weather'][0]['description'])
+
+            self.desc = unidecode(j['weather'][0]['description']).capitalize()
             self.temp = int(j['main']['temp'])
-        except requests.exceptions:
+        except requests.exceptions.RequestException:
             logging.warn("Cant reach weather service")
             self.desc = "Weather service unavailable"
             self.temp = "N/A"
 
     def update_furnace(self):
+        sensor = w1thermsensor.W1ThermSensor()
+        temp = sensor.get_temperature()
+        temp = str(int(temp))+'\x02'
+        self.co = temp
+
+    def update_furnace2(self):
         fur_ip = self.config["furnace_ip"]
         fur_user = self.config["furnace_username"]
         fur_pass = self.config["furnace_pass"]
@@ -55,10 +60,12 @@ class ScreenSaverContext:
         auth = HTTPBasicAuth(fur_user, fur_pass)
         try:
             ret = requests.get('http://' + fur_ip + '/getregister.cgi?device=0&tkot_value', auth=auth)
-        except requests.exceptions.ConnectionError:
+        except requests.exceptions.RequestException:
             logging.warn("Cant reach CO2 furnace")
-            return ["N/A"]
+            self.co = "N/A"
+            return
 
         xml_ret = ElementTree.fromstring(ret.content)
-        self.co = int(float(xml_ret[0][0].get("v")))
+        co_temp = int(float(xml_ret[0][0].get("v")))
+        self.co = str(co_temp)+'\x02'
 

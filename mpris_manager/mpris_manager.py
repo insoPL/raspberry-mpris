@@ -6,7 +6,8 @@ from spotifyd_controller import SpotifydController
 
 
 class MprisManger:
-    def __init__(self,config):
+    def __init__(self, config):
+        config = config['main_options']
         self.MAX_TIMEOUT = int(config["screen_saver_timeout"])
         self.last_player = "mopidy"
         self.all_paused = True

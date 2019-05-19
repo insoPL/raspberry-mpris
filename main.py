@@ -11,23 +11,23 @@ from context_manager import ScreenSaverContext, PlayerContext
 from lcd_manager import LcdManager
 from mpris_manager import MprisManger
 
-config = configparser.ConfigParser()
-config.read('/home/pi/raspberry-mpris/config.ini')
-config = config['main_options']
+main_config = configparser.ConfigParser()
+main_config.read('/home/pi/raspberry-mpris/config.ini')
+config = main_config['main_options']
 
 logging.getLogger().setLevel(logging.INFO)
 GPIO.setwarnings(False)
 GPIO.setmode(GPIO.BCM)
 logging.info("GPIO successfully initiated")
 
-mpris_manager = MprisManger(config)
-next_button = Button(int(config["next_buttons"]), lambda : mpris_manager.next_song())
-play_button = Button(int(config["play_buttons"]), lambda : mpris_manager.play_pause())
-prev_button = Button(int(config["prev_buttons"]), lambda : mpris_manager.previous_song())
+mpris_manager = MprisManger(main_config)
+next_button = Button(int(config["next_buttons"]), lambda: mpris_manager.next_song())
+play_button = Button(int(config["play_buttons"]), lambda: mpris_manager.play_pause())
+prev_button = Button(int(config["prev_buttons"]), lambda: mpris_manager.previous_song())
 
-lcd_manager = LcdManager()
+lcd_manager = LcdManager(main_config)
 
-def_screen = ScreenSaverContext()
+def_screen = ScreenSaverContext(main_config)
 meta_player = PlayerContext()
 
 
