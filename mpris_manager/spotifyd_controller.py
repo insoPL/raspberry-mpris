@@ -15,7 +15,11 @@ class SpotifydController(MprisController):
         proxy = system_bus.get_object('org.mpris.MediaPlayer2.'+self.player_name, '/org/mpris/MediaPlayer2')
         main_dbus = dbus.Interface(proxy, dbus_interface='org.mpris.MediaPlayer2')
 
-        main_dbus.Quit()
+        try:
+            main_dbus.Quit()
+        except dbus.exceptions.DBusException:
+            pass
+
         self.player = None
         self.properties = None
         logging.info("[%s] Quit" % self.player_name)

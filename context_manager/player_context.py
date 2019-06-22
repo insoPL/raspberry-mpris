@@ -10,15 +10,16 @@ class PlayerContext:
         self.player = "X"
         self.all_paused = True
 
-    def set_by_meta(self,meta):
-        self.title, self.artists, self.length, new_position, last_player, all_paused = meta
-        self.player = last_player
-        self.all_paused = all_paused
-        if abs(self.position-new_position)>3:
-            self.position=new_position
+    def set_by_meta(self, meta):
+        if meta is not None:
+            self.title, self.artists, self.length, new_position, last_player, all_paused = meta
+            self.player = last_player
+            self.all_paused = all_paused
+            if abs(self.position-new_position) > 3:
+                self.position=new_position
 
     def get_lines(self):
-        if not self.all_paused:
+        if not self.all_paused and self.length>self.position:
             self.position += 1
         return self.get_player_line(), self.get_timer_line()
 

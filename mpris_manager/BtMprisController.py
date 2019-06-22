@@ -30,10 +30,6 @@ class BtMprisController(MprisController):
 
     @except_dbus_error
     def get_meta(self):
-        def adjust_time_to_player(time):
-            time /= 1000
-            return int(time)
-
         title, artists, length, position = "","","0","0"
 
         meta = self._raw_property("Track")
@@ -44,11 +40,11 @@ class BtMprisController(MprisController):
             elif "Artist" in key:
                 artists = value
             elif "Duration" in key:
-                length = adjust_time_to_player(value)
+                length = self.adjust_time_to_player(value)
         position = self._raw_property("Position")
-        position = adjust_time_to_player(position)
+        position = self.adjust_time_to_player(position)
 
-        return title,artists, length, position
+        return title, artists, length, position
 
     def _raw_property(self, name):
         return self.properties.Get('org.bluez.MediaPlayer1', name)
@@ -62,3 +58,8 @@ class BtMprisController(MprisController):
             raise dbus.exceptions.DBusException
         else:
             return objects[0]
+
+    @staticmethod
+    def adjust_time_to_player(time):
+        time /= 1000
+        return int(time)

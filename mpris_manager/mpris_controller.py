@@ -19,7 +19,7 @@ class MprisController:
         proxy = system_bus.get_object('org.mpris.MediaPlayer2.'+self.player_name, '/org/mpris/MediaPlayer2')
         self.player = dbus.Interface(proxy, dbus_interface='org.mpris.MediaPlayer2.Player')
         self.properties = dbus.Interface(proxy, 'org.freedesktop.DBus.Properties')
-        logging.info("succesfully opened dbus for"+self.player_name)
+        logging.info("succesfully opened dbus for "+self.player_name)
 
     @except_dbus_error
     def play_pause(self):
@@ -62,7 +62,7 @@ class MprisController:
         position = self._raw_property("Position")
         position = self.adjust_time_to_player(position)
 
-        return title,artists, length, position
+        return title, artists, length, position
 
     def quit(self):
         pass
@@ -72,7 +72,7 @@ class MprisController:
         return self._raw_property("Position")
 
     def _raw_property(self, name):
-        return self.properties.Get('org.mpris.MediaPlayer2.Player', name)
+        return self.properties.Get('org.mpris.MediaPlayer2.Player', name, timeout=3)
 
     @staticmethod
     def adjust_time_to_player(time):
