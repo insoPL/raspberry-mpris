@@ -14,11 +14,11 @@ class PlayerContext:
     def set_by_meta(self, meta):
         if meta is not None:
             self.title, self.artists, self.length, new_position, self.player, self.all_paused, self.is_stopped = meta
-            if abs(self.position-new_position) > 3:
-                self.position=new_position
+            if abs(self.position - new_position) > 3:
+                self.position = new_position
 
     def get_lines(self):
-        if not self.all_paused and self.length>self.position:
+        if not self.all_paused and self.length > self.position:
             self.position += 1
         return self.get_player_line(), self.get_timer_line()
 
@@ -30,7 +30,7 @@ class PlayerContext:
 
         timer_str = self._pretty_sec(self.position) + "/" + self._pretty_sec(self.length)
         player_str = "[%s]" % self.player[0].upper()
-        return playing_status+" "+timer_str+" "+player_str
+        return playing_status + " " + timer_str + " " + player_str
 
     def get_player_line(self):
         title = unidecode(self.title)

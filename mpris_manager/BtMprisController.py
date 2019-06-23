@@ -1,5 +1,7 @@
 import logging
+
 import dbus
+
 from dbus_tools import except_dbus_error
 from .mpris_controller import MprisController
 
@@ -10,10 +12,10 @@ class BtMprisController(MprisController):
 
     def initialize(self):
         system_bus = dbus.SystemBus()
-        proxy = system_bus.get_object('org.bluez',self._find_player_path())
+        proxy = system_bus.get_object('org.bluez', self._find_player_path())
         self.player = dbus.Interface(proxy, dbus_interface='org.bluez.MediaPlayer1')
         self.properties = dbus.Interface(proxy, 'org.freedesktop.DBus.Properties')
-        logging.info("succesfully opened dbus for"+self.player_name)
+        logging.info("succesfully opened dbus for" + self.player_name)
 
     @except_dbus_error
     def play_pause(self):
@@ -30,7 +32,7 @@ class BtMprisController(MprisController):
 
     @except_dbus_error
     def get_meta(self):
-        title, artists, length, position = "","","0","0"
+        title, artists, length, position = "", "", "0", "0"
 
         meta = self._raw_property("Track")
         assert isinstance(meta, dict)

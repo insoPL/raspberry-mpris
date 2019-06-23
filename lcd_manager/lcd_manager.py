@@ -21,8 +21,8 @@ class LcdManager:
             cols=self.lcd_width
         )
 
-        for foo, bar in zip(range(len(register_char)),register_char):
-            self.lcd.create_char(foo,bar)
+        for foo, bar in zip(range(len(register_char)), register_char):
+            self.lcd.create_char(foo, bar)
 
         self.lines = [
             TextLine('', self.lcd_width),

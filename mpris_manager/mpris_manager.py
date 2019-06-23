@@ -1,6 +1,5 @@
 import logging
 
-from BtMprisController import BtMprisController
 from mpris_controller import MprisController
 from spotifyd_controller import SpotifydController
 
@@ -14,7 +13,7 @@ class MprisManger:
         self.timeout_timer = 1000000
         self.selfly_closed = False
         self.players = dict()
-       # self.players["BtMpris"] = BtMprisController("BtMpris")
+        # self.players["BtMpris"] = BtMprisController("BtMpris")
         self.players["spotifyd"] = SpotifydController("spotifyd")
         self.players["mopidy"] = MprisController("mopidy")
 
@@ -36,7 +35,7 @@ class MprisManger:
                     logging.info("Currently rocking:" + self.last_player_name)
                     return
         if self.all_paused:
-            self.timeout_timer+=1
+            self.timeout_timer += 1
         return
 
     def pause(self):

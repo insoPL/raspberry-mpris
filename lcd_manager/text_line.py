@@ -11,7 +11,7 @@ class TextLine(object):
     def set_text(self, text):
         if len(text) > self.width:
             self.animated = True
-            new_text = text+" "*self.DEAD_SPACES
+            new_text = text + " " * self.DEAD_SPACES
         else:
             self.animated = False
             new_text = text
@@ -29,8 +29,8 @@ class TextLine(object):
         else:
             i = self.i
 
-        framebuffer = self.text[i:self.width+i]
+        framebuffer = self.text[i: self.width + i]
         self.i += 1
-        if self.i > len(self.text)-self.width:
+        if self.i > len(self.text) - self.width:
             self.i = -3
         return framebuffer

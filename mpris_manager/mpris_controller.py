@@ -1,5 +1,7 @@
-import dbus
 import logging
+
+import dbus
+
 from dbus_tools import except_dbus_error
 
 
@@ -16,10 +18,10 @@ class MprisController:
 
     def initialize(self):
         system_bus = dbus.SystemBus()
-        proxy = system_bus.get_object('org.mpris.MediaPlayer2.'+self.player_name, '/org/mpris/MediaPlayer2')
+        proxy = system_bus.get_object('org.mpris.MediaPlayer2.' + self.player_name, '/org/mpris/MediaPlayer2')
         self.player = dbus.Interface(proxy, dbus_interface='org.mpris.MediaPlayer2.Player')
         self.properties = dbus.Interface(proxy, 'org.freedesktop.DBus.Properties')
-        logging.info("succesfully opened dbus for "+self.player_name)
+        logging.info("succesfully opened dbus for " + self.player_name)
 
     @except_dbus_error
     def play_pause(self):
@@ -53,7 +55,7 @@ class MprisController:
         :return: title, artists, length, position
         :rtype:  (str, unicode, int, int)
         """
-        title, artists, length, position = "","","0","0"
+        title, artists, length, position = "", "", "0", "0"
 
         meta = self._raw_property("Metadata")
         assert isinstance(meta, dict)

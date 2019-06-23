@@ -1,6 +1,8 @@
-from mpris_controller import MprisController
 import logging
+
 import dbus
+
+from mpris_controller import MprisController
 
 
 class SpotifydController(MprisController):
@@ -11,7 +13,7 @@ class SpotifydController(MprisController):
     def quit(self):
         if self.player_name is None or self.properties is None: return
         system_bus = dbus.SystemBus()
-        proxy = system_bus.get_object('org.mpris.MediaPlayer2.'+self.player_name, '/org/mpris/MediaPlayer2')
+        proxy = system_bus.get_object('org.mpris.MediaPlayer2.' + self.player_name, '/org/mpris/MediaPlayer2')
         main_dbus = dbus.Interface(proxy, dbus_interface='org.mpris.MediaPlayer2')
 
         try:

@@ -1,5 +1,6 @@
-import RPi.GPIO as GPIO
 import logging
+
+import RPi.GPIO as GPIO
 
 
 class Button:

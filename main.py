@@ -1,6 +1,7 @@
 # coding=utf-8
 
 import logging
+import multiprocessing
 import time
 
 import RPi.GPIO as GPIO
@@ -10,7 +11,6 @@ from button import Button
 from context_manager import ScreenSaverContext, PlayerContext
 from lcd_manager import LcdManager
 from mpris_manager import MprisManger
-import multiprocessing
 
 config = configparser.ConfigParser()
 config.read('/home/pi/raspberry-mpris/config.ini')
@@ -54,7 +54,7 @@ def update_context_meta(song_metadata):
 
     while True:
         new_meta = mpris_manager.get_meta()
-        for a,b in enumerate(new_meta):
+        for a, b in enumerate(new_meta):
             song_metadata[a] = b
 
         tim = time.time()

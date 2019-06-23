@@ -1,4 +1,3 @@
-
 register_char = [
     [  # play
         0b01000,

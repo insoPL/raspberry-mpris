@@ -1,4 +1,5 @@
 from functools import wraps
+
 import dbus
 
 
@@ -16,5 +17,5 @@ def except_dbus_error(func):
                 return func(*args, **kwargs)
             except dbus.exceptions.DBusException:
                 return None
-    return func_wrapper
 
+    return func_wrapper
