@@ -52,17 +52,21 @@ class MprisManger:
         self.last_player.previous_song()
 
     def get_meta(self):
+        """
+        Fetches title, artists, length, position, last_player_name, all_paused from current mpris player
+
+        :return: song title, names of artists,  song length, current playing position, last active player name, is playing paused
+        :rtype:  (str, unicode, int, int, str, bool)
+        """
         self.check_player()
+
         if self.timeout_timer > self.MAX_TIMEOUT:
             if self.last_player.player is not None:
                 self.last_player.quit()
-            return "timeout"
+            stopped = True
+        else:
+            stopped = False
 
-        meta = self.last_player.get_meta()
-        if meta is None:
-            return "timeout"
-        meta = list(meta)
-        meta.append(self.last_player_name)
-        meta.append(self.all_paused)
-        return meta
+        title, artists, length, position = self.last_player.get_meta()
 
+        return title, artists, length, position, self.last_player_name, self.all_paused, stopped

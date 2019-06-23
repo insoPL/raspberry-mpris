@@ -9,12 +9,11 @@ class PlayerContext:
         self.position = 0
         self.player = "X"
         self.all_paused = True
+        self.is_stopped = True
 
     def set_by_meta(self, meta):
         if meta is not None:
-            self.title, self.artists, self.length, new_position, last_player, all_paused = meta
-            self.player = last_player
-            self.all_paused = all_paused
+            self.title, self.artists, self.length, new_position, self.player, self.all_paused, self.is_stopped = meta
             if abs(self.position-new_position) > 3:
                 self.position=new_position
 

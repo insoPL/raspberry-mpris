@@ -17,7 +17,7 @@ class ScreenSaverContext:
         self.co = 0
 
         self.update_weather()
-        self.update_furnace()
+        self.update_thermometer()
 
     def get_lines(self):
         return self.get_time_line(), self.get_weather_line()
@@ -46,13 +46,13 @@ class ScreenSaverContext:
             self.desc = "Weather service unavailable"
             self.temp = "N/A"
 
-    def update_furnace(self):
+    def update_thermometer(self):
         sensor = w1thermsensor.W1ThermSensor()
         temp = sensor.get_temperature()
         temp = str(int(temp))+'\x02'
         self.co = temp
 
-    def update_furnace2(self):
+    def update_thermometer_from_furnace(self):
         fur_ip = self.config["furnace_ip"]
         fur_user = self.config["furnace_username"]
         fur_pass = self.config["furnace_pass"]
@@ -68,4 +68,3 @@ class ScreenSaverContext:
         xml_ret = ElementTree.fromstring(ret.content)
         co_temp = int(float(xml_ret[0][0].get("v")))
         self.co = str(co_temp)+'\x02'
-

@@ -47,7 +47,12 @@ class MprisController:
 
     @except_dbus_error
     def get_meta(self):
+        """
+        Fetches title, artists, length, position from current mpris player
 
+        :return: title, artists, length, position
+        :rtype:  (str, unicode, int, int)
+        """
         title, artists, length, position = "","","0","0"
 
         meta = self._raw_property("Metadata")
@@ -59,6 +64,7 @@ class MprisController:
                 artists = ", ".join(value)
             elif "length" in key:
                 length = self.adjust_time_to_player(value)
+
         position = self._raw_property("Position")
         position = self.adjust_time_to_player(position)
 

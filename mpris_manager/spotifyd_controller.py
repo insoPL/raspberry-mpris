@@ -4,7 +4,6 @@ import dbus
 
 
 class SpotifydController(MprisController):
-
     @staticmethod
     def adjust_time_to_player(time):
         return int(time / 1000)
