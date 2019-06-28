@@ -7,6 +7,8 @@ from .mpris_controller import MprisController
 
 
 class BtMprisController(MprisController):
+
+    #disconnect problem
     def __init__(self, player_name):
         MprisController.__init__(self, player_name)
 

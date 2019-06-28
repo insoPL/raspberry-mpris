@@ -1,2 +1,4 @@
 from player_context import PlayerContext
 from screen_saver_context import ScreenSaverContext
+from download_weather_data import download_weather_data
+from check_termometer import check_thermometer

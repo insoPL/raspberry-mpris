@@ -84,4 +84,4 @@ class MprisController:
 
     @staticmethod
     def adjust_time_to_player(time):
-        return int(time / 1000)
+        return int(time / 1000000)

@@ -11,6 +11,7 @@ from button import Button
 from context_manager import ScreenSaverContext, PlayerContext
 from lcd_manager import LcdManager
 from mpris_manager import MprisManger
+from context_manager import download_weather_data, check_thermometer
 
 config = configparser.ConfigParser()
 config.read('/home/pi/raspberry-mpris/config.ini')
@@ -22,11 +23,12 @@ GPIO.setmode(GPIO.BCM)
 logging.info("GPIO successfully initiated")
 
 
-def lcd_main_loop(song_metadata, lcd_manager):
-    def_screen = ScreenSaverContext(config)
+def lcd_main_loop(song_metadata, weather_data, lcd_manager):
     meta_player = PlayerContext()
+    def_screen = ScreenSaverContext(config)
     while True:
         if song_metadata[6]:
+            def_screen.set_weather_data(weather_data)
             lines = def_screen.get_lines()
         else:
             meta_player.set_by_meta(song_metadata)
@@ -39,10 +41,15 @@ def lcd_main_loop(song_metadata, lcd_manager):
         time.sleep(tim)
 
 
-def update_context():
+def update_weather_data(weather_data):
     while True:
-        def_screen.update_thermometer()
-        def_screen.update_weather()
+        desc, temp = download_weather_data(config)
+        weather_data[0] = desc
+        weather_data[1] = temp
+
+        thermometer_temp = check_thermometer()
+        weather_data[2] = thermometer_temp
+
         time.sleep(60 * int(main_config["weather_update"]))
 
 
@@ -68,16 +75,21 @@ if __name__ == '__main__':
 
     manager = multiprocessing.Manager()
     song_metadata = manager.list(["", "", 0, 0, "X", True, True])
+    weather_data = manager.list(["test", "32", "32"])
 
-    lcd_screen_update_process = multiprocessing.Process(target=lcd_main_loop, args=(song_metadata, lcd_manager))
+    lcd_screen_update_process = multiprocessing.Process(target=lcd_main_loop, args=(song_metadata, weather_data, lcd_manager))
     meta_update_process = multiprocessing.Process(target=update_context_meta, args=(song_metadata,))
+    update_weather_process = multiprocessing.Process(target=update_weather_data, args=(weather_data,))
+
 
     try:
         lcd_screen_update_process.start()
         meta_update_process.start()
+        update_weather_process.start()
 
         lcd_screen_update_process.join()
         meta_update_process.join()
+        update_weather_process.join()
 
     except KeyboardInterrupt:
         pass
@@ -85,6 +97,7 @@ if __name__ == '__main__':
     finally:
         lcd_screen_update_process.terminate()
         meta_update_process.terminate()
+        update_weather_process.terminate()
         lcd_manager.close()
         GPIO.cleanup()
         logging.info("good bye")
